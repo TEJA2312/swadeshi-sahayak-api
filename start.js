@@ -2,13 +2,16 @@ require('dotenv').config();
 
 const express = require('express');
 const bodyParser = require('body-parser');
-const applicationRouter = require('./configurations/routes')
 const mongoose = require('mongoose'); 
+
+const applicationRouter = require('./configurations/routes');
+const errorHandler = require('./configurations/error');
 
 const app = express();
 
 app.use(bodyParser.json());
 app.use('/api/v1', applicationRouter);
+app.use(errorHandler);
 
 mongoose.connect(process.env.MONGODB_URL, {
   useNewUrlParser: true, 

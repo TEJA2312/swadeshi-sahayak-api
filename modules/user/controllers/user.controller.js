@@ -7,7 +7,7 @@ const otpWarehouse = require('../warehouse/otp.warehouse')
 
 const userController = {
 
-  createUser: async (req, res) => {
+  createUser: async (req, res, next) => {
     try {
       
       const user = await userWarehouse.createUser(req.body);
@@ -17,36 +17,36 @@ const userController = {
       return res.status(201).json(user);
 
     } catch (error) {
-      console.error(error);
-      return res.status(500).json({ error: 'error creating user' });
+      console.error(error)
+      next(error);
     }
   },
 
-  getUserByPhoneNumber: async (req, res) => {
+  getUserByPhoneNumber: async (req, res, next) => {
     try {
       
       const user = await userWarehouse.getUserByPhoneNumber(req.query.phone);
       return res.status(200).json(user);
 
     } catch (error) {
-      console.error(error);
-      return res.status(500).json({ error: 'error getting user by phone number' });
+      console.error(error)
+      next(error)
     }
   },
 
-  verifyUserWithOtp: async (req, res) => {
+  verifyUserWithOtp: async (req, res, next) => {
     try {
 
       let data = await otpWarehouse.getLatestOtpByUserId(req.body.userId);
-
-      if(!data) return res.status(404).json({ error: 'no otp found! ...system error' });
+      
+      if(!data) throw Object.assign(new Error('no otp found! ...system error'), { statusCode: 404 });
 
       const currentMoment = moment.utc();
       const otpTimestamp = moment.utc(data.createdAt);
 
       const differenceInMinutes = currentMoment.diff(otpTimestamp, 'minutes');
-
-      if(differenceInMinutes > 10) return res.status(403).json({ error: 'your otp is expired' });   
+     
+      if(differenceInMinutes > 10) throw Object.assign(new Error('your otp is expired'), { statusCode: 403 });
 
 
       if(data.otp === req.body.otp){
@@ -54,11 +54,11 @@ const userController = {
         return res.status(200).json({ response: "user verified" });
       }
       
-      return res.status(403).json({ error: "wrong otp" });
+      throw Object.assign(new Error('wrong otp'), { statusCode: 403 });
       
     } catch(error) {
-      console.error(error);
-      return res.status(500).json({ error: 'error in verifying user' });
+      console.error(error)
+      next(error)
     }
   },
 

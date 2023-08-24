@@ -25,15 +25,15 @@ const otpController = {
 
     } catch (error) {
       console.error(error);
-      throw new Error(error);
+      throw Object.assign(new Error(error.message), { statusCode: 500 });
     }
   },
 
-  resendOtp: async (req, res) => {
+  resendOtp: async (req, res, next) => {
    try {
       let user = await userWarehouse.getUserById(req.body.userId);
 
-      if(!user) return res.status(404).json({ error: 'user not found' });
+      if(!user) throw Object.assign(new Error('user not found'), { statusCode: 404 });
 
       let data = {
         userId: user.id,
@@ -49,8 +49,8 @@ const otpController = {
       return res.status(201).json({ response: "otp sent to register mobile number" });
 
    } catch (error) {
-      res.status(500).json({ error: 'error resending otp' });
       console.error(error);
+      next(error);
    }
   }
 
