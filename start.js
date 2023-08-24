@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose'); 
 
 const applicationRouter = require('./configurations/routes');
-const errorHandler = require('./configurations/error');
+const errorHandler = require('./configurations/error')
 
 const app = express();
 
