@@ -2,3 +2,4 @@ node_modules
 package-lock.json
 *.log
 .env
+google_translate_token.json

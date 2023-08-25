@@ -6,11 +6,13 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node start.js",
-    "dev": "nodemon start.js"
+    "dev": "nodemon start.js",
+    "translate": "node start.js ./google_translate_token.json"
   },
   "author": "Tejas Shirnalkar",
   "license": "ISC",
   "dependencies": {
+    "@google-cloud/translate": "^8.0.1",
     "axios": "^1.4.0",
     "body-parser": "^1.20.2",
     "cld": "^2.9.0",
