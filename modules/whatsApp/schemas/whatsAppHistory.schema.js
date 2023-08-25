@@ -23,6 +23,11 @@ const whatsAppHistorySchema = new mongoose.Schema({
     type: String, 
     required: true,
     trim: true
+  },
+
+  locale: {
+    type: String, 
+    required: true,
   }
 
 }, { timestamps: true, minimize: false });
