@@ -1,4 +1,4 @@
-const translate = require('../configurations/googleTranslationApi');
+const translate = require('../configurations/googleTranslationApi.config');
 
 async function languageDetection(text) {
   try{

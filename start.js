@@ -4,8 +4,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose'); 
 
-const applicationRouter = require('./configurations/routes');
-const errorHandler = require('./configurations/error')
+const applicationRouter = require('./configurations/routes.config');
+const errorHandler = require('./configurations/error.config')
 
 const app = express();
 

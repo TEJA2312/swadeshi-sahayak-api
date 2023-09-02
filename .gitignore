@@ -3,3 +3,4 @@ package-lock.json
 *.log
 .env
 google_translate_token.json
+.DS_store

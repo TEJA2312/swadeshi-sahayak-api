@@ -5,8 +5,8 @@
   "main": "start.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node start.js",
-    "dev": "nodemon start.js",
+    "start": "nodemon server.js",
+    "dev": "nodemon server.js",
     "translate": "node start.js ./google_translate_token.json"
   },
   "author": "Tejas Shirnalkar",
@@ -20,7 +20,8 @@
     "express": "^4.18.2",
     "moment": "^2.29.4",
     "mongodb": "^5.7.0",
-    "mongoose": "^7.4.2"
+    "mongoose": "^7.4.2",
+    "openai": "^4.3.1"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"

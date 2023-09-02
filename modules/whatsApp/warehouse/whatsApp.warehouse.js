@@ -1,4 +1,5 @@
 const WhatsAppHistory = require('../schemas/whatsAppHistory.schema');
+const mongoose = require('mongoose');
 
 const whatsAppWarehouse = {
 
@@ -7,10 +8,53 @@ const whatsAppWarehouse = {
   },
 
   searchInWhatsAppHistory: async (search, userId, locale) => {
-    return await WhatsAppHistory.find({ $text: { $search: search }, userId: userId, locale: locale },
-      { score: { $meta: 'textScore' } })
-      .sort({ score: { $meta: 'textScore' } })
-      .select("-_id  by content");
+    return await WhatsAppHistory.aggregate([
+      {
+        $match: {
+          $text: { $search: search },
+          userId: new mongoose.Types.ObjectId(userId),
+          locale: locale,
+          score: { $gte: 1 } 
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          role: 1,
+          content: 1
+        }
+      },
+      {
+        $sort: { createdAt: 1 }
+      }
+    ]);
+  },
+  
+
+  getLatestWhatsAppHistory: async (userId) => {
+
+    // get latest 10 documents but return them in oldest first order
+    return await WhatsAppHistory.aggregate([
+      { 
+        $match: { userId: new mongoose.Types.ObjectId(userId) }
+      },
+      {
+        $sort: { createdAt: -1 } 
+      },
+      {
+        $limit: 10 
+      },
+      {
+        $project: {
+          _id: 0,
+          role: 1,
+          content: 1
+        }
+      },
+      {
+        $sort: { createdAt: 1 } 
+      }
+    ]);
   }
   
 }
