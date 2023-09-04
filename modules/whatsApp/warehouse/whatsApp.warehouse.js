@@ -14,18 +14,26 @@ const whatsAppWarehouse = {
           $text: { $search: search },
           userId: new mongoose.Types.ObjectId(userId),
           locale: locale,
-          score: { $gte: 1 } 
         }
+      },
+      {
+        $addFields: {
+          score: { $meta: "textScore" }
+        }
+      },
+      {
+        $match: { score: { $gte: 1 } }
+      },
+      {
+        $sort: { createdAt: 1 } // oldest first
       },
       {
         $project: {
           _id: 0,
           role: 1,
-          content: 1
+          content: 1,
+          score:1
         }
-      },
-      {
-        $sort: { createdAt: 1 }
       }
     ]);
   },
@@ -39,10 +47,13 @@ const whatsAppWarehouse = {
         $match: { userId: new mongoose.Types.ObjectId(userId) }
       },
       {
-        $sort: { createdAt: -1 } 
+        $sort: { createdAt: -1 } // newest first
       },
       {
         $limit: 10 
+      },
+      {
+        $sort: { createdAt: 1 } // oldest first
       },
       {
         $project: {
@@ -50,9 +61,6 @@ const whatsAppWarehouse = {
           role: 1,
           content: 1
         }
-      },
-      {
-        $sort: { createdAt: 1 } 
       }
     ]);
   }

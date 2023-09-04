@@ -5,10 +5,8 @@ const errorHandler = (err, req, res, next) => {
   
   console.error(err.stack);
 
-  if(process.env.NODE_ENV === 'development') return res.status(statusCode).json({ error: message });
+  return res.status(statusCode).json({ error: message });
   
-  return res.status(500).json({ error: "Internal Server Error" });
-
 }
 
 module.exports = errorHandler;

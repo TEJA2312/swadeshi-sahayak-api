@@ -24,17 +24,17 @@ const otpController = {
       return true;
 
     } catch (error) {
-      console.error(error);
-      throw Object.assign(new Error(error.message), { statusCode: 500 });
+      throw error;
     }
   },
 
-  resendOtp: async (req, res, next) => {
+  resendOtp: async (requestBody) => {
    try {
-      let user = await userWarehouse.getUserById(req.body.userId);
-
+      let user = await userWarehouse.getUserById(requestBody.userId);
+   
       if(!user) throw Object.assign(new Error('user not found'), { statusCode: 404 });
-
+      console.log("{", user)
+      
       let data = {
         userId: user.id,
         otp: generateOTP(6),
@@ -46,11 +46,10 @@ const otpController = {
       // -- balance expired i'll activate soon --
       // await sendSMS(user.dailCode, "7972228649", data.otp);
 
-      return res.status(201).json({ response: "otp sent to register mobile number" });
+      return { response: "otp sent to register mobile number" }
 
    } catch (error) {
-      console.error(error);
-      next(error);
+      throw error
    }
   }
 

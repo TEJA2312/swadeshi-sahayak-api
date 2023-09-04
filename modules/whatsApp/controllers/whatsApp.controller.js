@@ -5,26 +5,26 @@ const openai = require('../../../configurations/gpt.config')
 
 const whatsAppController = {
 
-  converse: async (req, res, next) => {
+  converse: async (requestBody) => {
     try {
     
-    if(!req.body.userId || !req.body.question) throw Object.assign(new Error('userId and question is required'), { statusCode: 500 });
+    if(!requestBody.userId || !requestBody.question) throw Object.assign(new Error('userId and question is required'), { statusCode: 500 });
 
-     const locale = await languageDetection(req.body.question);
+     const locale = await languageDetection(requestBody.question);
 
-     let question = req.body.question;
+     let question = requestBody.question;
 
-     if(locale !== 'en') question = await translateText(req.body.question, 'en');
+     if(locale !== 'en') question = await translateText(requestBody.question, 'en');
 
      await whatsAppWarehouse.createWhatsAppHistory({
-      userId: req.body.userId,
+      userId: requestBody.userId,
       role: 'user',
-      multilingualContent: req.body.question,
+      multilingualContent: requestBody.question,
       content: question,
       locale: locale
      })
          
-     let finalMessagesArray = await whatsAppController.getContextForGPT(req.body.question, req.body.userId, locale)
+     let finalMessagesArray = await whatsAppController.getContextForGPT(requestBody.question, requestBody.userId, locale)
     
      finalMessagesArray.push({ role: "system", content: "Below is the user's actual query for you to answer:"})
      finalMessagesArray.push({ role: "user", content: question });
@@ -39,18 +39,17 @@ const whatsAppController = {
      if(locale !== 'en') response = await translateText(response, locale);
 
      await whatsAppWarehouse.createWhatsAppHistory({
-      userId: req.body.userId,
+      userId: requestBody.userId,
       role: 'assistant',
       multilingualContent: response,
       content: chatCompletion.choices[0].message.content,
       locale: locale
      })
  
-     return res.status(200).json({ output: response, english: chatCompletion.choices[0].message.content });
+     return { output: response, english: chatCompletion.choices[0].message.content }
  
     } catch(error){
-     console.error(error)
-     next(error);
+      throw error;
     }
  
   },
@@ -63,10 +62,7 @@ const whatsAppController = {
 
       let result = await whatsAppWarehouse.searchInWhatsAppHistory(search, userId, locale);
 
-      if(result.length === 0){
-        const latest = await whatsAppWarehouse.getLatestWhatsAppHistory(userId);
-        result = latest.reverse();
-      }
+      if(result.length === 0) result = await whatsAppWarehouse.getLatestWhatsAppHistory(userId);
       
       if(result.length !== 0) {
         finalContextArray.push({ role: "system", content: "Here is some relevant context that matches the user\'s query:" });
@@ -76,23 +72,8 @@ const whatsAppController = {
       return finalContextArray
 
     } catch(error) {
-      console.error(error);
-      throw new Error(error);
+      throw error;
     }    
-  },
-
-  test_getContextForGPT: async (req, res, next) => {
-    try{
-      
-      const locale = await languageDetection(req.query.question);
-      const result = await whatsAppController.getContextForGPT(req.query.question, req.query.userId, locale);
-
-      return res.status(200).json(result);
-
-    }catch(error){
-     console.error(error)
-     next(error);
-    }
   }
 
 }

@@ -7,37 +7,36 @@ const otpWarehouse = require('../warehouse/otp.warehouse')
 
 const userController = {
 
-  createUser: async (req, res, next) => {
-    try {
-      
-      const user = await userWarehouse.createUser(req.body);
+  createUser: async (requestBody) => {
+    try { 
 
+      const user = await userWarehouse.createUser(requestBody);
       await otpController.generateOtpForUser(user.id, user.dailCode, '7972228649');
 
-      return res.status(201).json(user);
+      return user
 
     } catch (error) {
-      console.error(error)
-      next(error);
+      throw error; // not throw new Error - new wont propogate status code to next(e)
     }
   },
 
-  getUserByPhoneNumber: async (req, res, next) => {
+  getUserByPhoneNumber: async (phone) => {
     try {
+
+      const user = await userWarehouse.getUserByPhoneNumber(phone);
+      if(!user) throw Object.assign(new Error('user not found'), { statusCode: 404 });
       
-      const user = await userWarehouse.getUserByPhoneNumber(req.query.phone);
-      return res.status(200).json(user);
+      return user
 
     } catch (error) {
-      console.error(error)
-      next(error)
+      throw error;
     }
   },
 
-  verifyUserWithOtp: async (req, res, next) => {
+  verifyUserWithOtp: async (requestBody) => {
     try {
 
-      let data = await otpWarehouse.getLatestOtpByUserId(req.body.userId);
+      let data = await otpWarehouse.getLatestOtpByUserId(requestBody.userId);
       
       if(!data) throw Object.assign(new Error('no otp found! ...system error'), { statusCode: 404 });
 
@@ -49,16 +48,15 @@ const userController = {
       if(differenceInMinutes > 10) throw Object.assign(new Error('your otp is expired'), { statusCode: 403 });
 
 
-      if(data.otp === req.body.otp){
-        await userWarehouse.updateUserById({ verified: true }, req.body.userId)
-        return res.status(200).json({ response: "user verified" });
+      if(data.otp === requestBody.otp){
+        await userWarehouse.updateUserById({ verified: true }, requestBody.userId)
+        return { response: "user verified" }
       }
       
       throw Object.assign(new Error('wrong otp'), { statusCode: 403 });
       
     } catch(error) {
-      console.error(error)
-      next(error)
+      throw error
     }
   },
 
