@@ -28,12 +28,11 @@ const otpController = {
     }
   },
 
-  resendOtp: async (requestBody) => {
+  resendOtp: async (userId) => {
    try {
-      let user = await userWarehouse.getUserById(requestBody.userId);
+      let user = await userWarehouse.getUserById(userId);
    
       if(!user) throw Object.assign(new Error('user not found'), { statusCode: 404 });
-      console.log("{", user)
       
       let data = {
         userId: user.id,

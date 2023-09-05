@@ -5,10 +5,10 @@ const openai = require('../../../configurations/gpt.config')
 
 const whatsAppController = {
 
-  converse: async (requestBody) => {
+  converse: async (requestBody, userId) => {
     try {
     
-    if(!requestBody.userId || !requestBody.question) throw Object.assign(new Error('userId and question is required'), { statusCode: 500 });
+    if(!requestBody.question) throw Object.assign(new Error('question is required'), { statusCode: 500 });
 
      const locale = await languageDetection(requestBody.question);
 
@@ -17,14 +17,14 @@ const whatsAppController = {
      if(locale !== 'en') question = await translateText(requestBody.question, 'en');
 
      await whatsAppWarehouse.createWhatsAppHistory({
-      userId: requestBody.userId,
+      userId: userId,
       role: 'user',
       multilingualContent: requestBody.question,
       content: question,
       locale: locale
      })
          
-     let finalMessagesArray = await whatsAppController.getContextForGPT(requestBody.question, requestBody.userId, locale)
+     let finalMessagesArray = await whatsAppController.getContextForGPT(requestBody.question, userId, locale)
     
      finalMessagesArray.push({ role: "system", content: "Below is the user's actual query for you to answer:"})
      finalMessagesArray.push({ role: "user", content: question });
@@ -39,7 +39,7 @@ const whatsAppController = {
      if(locale !== 'en') response = await translateText(response, locale);
 
      await whatsAppWarehouse.createWhatsAppHistory({
-      userId: requestBody.userId,
+      userId: userId,
       role: 'assistant',
       multilingualContent: response,
       content: chatCompletion.choices[0].message.content,

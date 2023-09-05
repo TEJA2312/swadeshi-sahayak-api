@@ -31,8 +31,7 @@ const whatsAppWarehouse = {
         $project: {
           _id: 0,
           role: 1,
-          content: 1,
-          score:1
+          content: 1
         }
       }
     ]);

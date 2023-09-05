@@ -33,10 +33,10 @@ const userController = {
     }
   },
 
-  verifyUserWithOtp: async (requestBody) => {
+  verifyUserWithOtp: async (requestBody, userId) => {
     try {
 
-      let data = await otpWarehouse.getLatestOtpByUserId(requestBody.userId);
+      let data = await otpWarehouse.getLatestOtpByUserId(userId);
       
       if(!data) throw Object.assign(new Error('no otp found! ...system error'), { statusCode: 404 });
 
@@ -49,7 +49,7 @@ const userController = {
 
 
       if(data.otp === requestBody.otp){
-        await userWarehouse.updateUserById({ verified: true }, requestBody.userId)
+        await userWarehouse.updateUserById({ verified: true }, userId)
         return { response: "user verified" }
       }
       
