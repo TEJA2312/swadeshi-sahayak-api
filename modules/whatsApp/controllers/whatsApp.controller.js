@@ -58,15 +58,23 @@ const whatsAppController = {
   getContextForGPT: async (search, userId, locale) => {
     try{
       
-      let finalContextArray = [{ role: "system", content: "You are a helpful assistant. Your response will translated to users preffered language (by us not by you) so avoid using proverbs, idioms, and wordplay" }]
+      let finalContextArray = [
+        { role: "system", content: "You are a helpful assistant. Your response will translated to users user-preferred language (by us not by you) so avoid using proverbs, idioms, and wordplay" },
+        { role: "system", content: "I have provided both relevant messages that match the user\'s query and the latest messages both of which may or may not be related to the user's query" }
+      ]
 
-      let result = await whatsAppWarehouse.searchInWhatsAppHistory(search, userId, locale);
+      const relevantMessages = await whatsAppWarehouse.searchInWhatsAppHistory(search, userId, locale);
 
-      if(result.length === 0) result = await whatsAppWarehouse.getLatestWhatsAppHistory(userId);
-      
-      if(result.length !== 0) {
+      const latestMessages = await whatsAppWarehouse.getLatestWhatsAppHistory(userId);
+
+      if(relevantMessages.length !== 0) {
         finalContextArray.push({ role: "system", content: "Here is some relevant context that matches the user\'s query:" });
-        finalContextArray = [...finalContextArray, ...result ]
+        finalContextArray = [...finalContextArray, ...relevantMessages];
+      }
+      
+      if(latestMessages.length !== 0) {
+        finalContextArray.push({ role: "system", content: "Here are some recent messages of the user:" });
+        finalContextArray = [...finalContextArray, ...latestMessages ]
        }
             
       return finalContextArray
