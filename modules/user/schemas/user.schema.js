@@ -10,32 +10,14 @@ const userSchema = new mongoose.Schema({
 
   lastName: { 
     type: String, 
-    required: true,
+    required: false,
     trim: true, 
-  },
-
-  dailCode: {
-    type: String, 
-    required: true,
-    enum: ['+91'],
-    default: '+91'
-  },
-
-  phone: {
-    type: String,
-    required: true,
-    unique: true,
-    validate: {
-      validator: function (number) {
-        return /^[0-9]{10}$/.test(number);
-      },
-      message: 'Phone number should be a string of 10 digits without spaces.'
-    }
   },
 
   email:{
     type: String, 
-    required: false,
+    unique: true,
+    required: true,
     validate: {
       validator: function (email) {
         return /^\S+@\S+\.\S+$/.test(email);
@@ -44,22 +26,16 @@ const userSchema = new mongoose.Schema({
     }
   },
 
-  whatsAppSubExpiry: {
-    type: Date,
-    default: null
+  jwtToken:{
+    type: String, 
+    required: false,
   },
 
-  verified: { 
+  emailVerified:{
     type: Boolean, 
-    default: false, 
-    required: true,
-  },
-
-  documentStatus: { 
-    type: Number, 
-    default: 1, 
-    required: true,
-  },
+    default: false,
+    required: false,
+  }
 
 }, { timestamps: true, minimize: false });
 

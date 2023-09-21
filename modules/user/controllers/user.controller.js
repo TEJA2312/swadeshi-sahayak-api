@@ -1,9 +1,10 @@
 const moment = require('moment');
 
 const userWarehouse = require('../warehouse/user.warehouse');
-
+const generateToken = require('../../../utils/generateToken.util')
 const otpController = require('./otp.controller')
-const otpWarehouse = require('../warehouse/otp.warehouse')
+const otpWarehouse = require('../warehouse/otp.warehouse');
+
 
 const userController = {
 
@@ -11,19 +12,21 @@ const userController = {
     try { 
 
       const user = await userWarehouse.createUser(requestBody);
-      await otpController.generateOtpForUser(user.id, user.dailCode, '7972228649');
+      const result = await userWarehouse.updateUserById({ jwtToken: generateToken(user.id) }, user.id);
 
-      return user
+      await otpController.generateOtpForUser(user.id, user.email);
+      
+      return result;
 
     } catch (error) {
       throw error; // not throw new Error - new wont propogate status code to next(e)
     }
   },
 
-  getUserByPhoneNumber: async (phone) => {
+  getUserByEmail: async (email) => {
     try {
 
-      const user = await userWarehouse.getUserByPhoneNumber(phone);
+      const user = await userWarehouse.getUserByEmail(email);
       if(!user) throw Object.assign(new Error('user not found'), { statusCode: 404 });
       
       return user
@@ -33,11 +36,10 @@ const userController = {
     }
   },
 
-  verifyUserWithOtp: async (requestBody, userId) => {
+  verifyUserWithOtp: async (requestBody) => {
     try {
 
-      let data = await otpWarehouse.getLatestOtpByUserId(userId);
-      
+      let data = await otpWarehouse.getLatestOtpByUserId(requestBody.userId);
       if(!data) throw Object.assign(new Error('no otp found! ...system error'), { statusCode: 404 });
 
       const currentMoment = moment.utc();
@@ -49,7 +51,7 @@ const userController = {
 
 
       if(data.otp === requestBody.otp){
-        await userWarehouse.updateUserById({ verified: true }, userId)
+        await userWarehouse.updateUserById({ emailVerified: true }, requestBody.userId);
         return { response: "user verified" }
       }
       
