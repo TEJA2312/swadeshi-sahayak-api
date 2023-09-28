@@ -1,5 +1,7 @@
 
-![favicon-removebg-preview](https://github.com/TEJA2312/swadeshi-sahayak-api/assets/62765495/b5a9bc03-e0c7-44aa-94d6-5d9afc2214d9)
+
+![Untitled design (7)](https://github.com/TEJA2312/swadeshi-sahayak-api/assets/62765495/7b771abb-11ab-4e8d-b8a7-4d533bdb27d4)
+
 ## swadeshi-sahayak-api
 
 ## Introduction
