@@ -13,3 +13,4 @@ This project uses custom MVC (mode-view-controller) architecture.
 - **controllers**: In this part of the modules we write all the business logic of applications
 - **warehouse**: In this part we write all the necessary CRUD calls to the database which can be reused in controllers
 
+## Example of Conversation with AI in MARATHI
