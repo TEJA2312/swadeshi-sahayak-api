@@ -1,8 +1,4 @@
-
-
-![Untitled design (8)](https://github.com/TEJA2312/swadeshi-sahayak-api/assets/62765495/ed0be86b-d57c-42bf-97a6-d4d49981c78a)
-
-## swadeshi-sahayak-api
+# swadeshi-sahayak-api
 
 ## Introduction
 Swadeshi Sahayak AI is an open-source project developed by Tejas Shirnalkar. It serves as a demonstration of a multilingual AI assistant tailored to empower India's Generation X, rather than being a practical problem-solving tool for them.
