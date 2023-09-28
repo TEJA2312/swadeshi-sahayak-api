@@ -14,3 +14,4 @@ This project uses custom MVC (mode-view-controller) architecture.
 - **warehouse**: In this part we write all the necessary CRUD calls to the database which can be reused in controllers
 
 ## Example of Conversation with AI in MARATHI
+Refer to the file to see the how my systems takes relevant context from past conversation [Link to example.js](example.js) 
