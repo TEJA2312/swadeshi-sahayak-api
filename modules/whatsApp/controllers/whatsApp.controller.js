@@ -82,6 +82,14 @@ const whatsAppController = {
     } catch(error) {
       throw error;
     }    
+  },
+
+  getAllMessages: async (userId) => {
+     try{
+       return await whatsAppWarehouse.getAllMessages(userId);
+     } catch(error) {
+      throw error;
+     }   
   }
 
 }

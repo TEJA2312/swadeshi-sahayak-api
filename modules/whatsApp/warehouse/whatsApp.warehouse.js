@@ -6,6 +6,10 @@ const whatsAppWarehouse = {
   createWhatsAppHistory: async (requestBody) => {
     return await WhatsAppHistory.create(requestBody);
   },
+  
+  getAllMessages: async (userId) => {
+    return await WhatsAppHistory.find({ userId: userId });
+  },
 
   searchInWhatsAppHistory: async (search, userId, locale) => {
     return await WhatsAppHistory.aggregate([

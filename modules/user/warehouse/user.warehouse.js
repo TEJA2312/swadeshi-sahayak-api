@@ -6,7 +6,7 @@ const userWarehouse = {
     return await User.create(requestBody);
   },
   getUserByEmail: async (email) => {
-    return await User.findOne({ email: email });
+    return await User.findOne({ email: email }).select('-jwtToken')
   },
   getUserById: async (id) => {
     return await User.findOne({ _id: id });
