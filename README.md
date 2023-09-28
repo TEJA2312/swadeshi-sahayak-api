@@ -1,10 +1,13 @@
-# swadeshi-sahayak-api-2
+# swadeshi-sahayak-api
 
 ## Introduction
 Swadeshi Sahayak AI is an open-source project developed by Tejas Shirnalkar. It serves as a demonstration of a multilingual AI assistant tailored to empower India's Generation X, rather than being a practical problem-solving tool for them.
 
 ## Projects testable APIs 🚀
 https://documenter.getpostman.com/view/29167945/2s9YJXaRLW
+
+## Example of Conversation with AI in MARATHI
+Refer to the file to see how my system takes relevant context from a past conversation and provides multilingual assistance [Link to example.js](example.js) 
 
 ## Architecture of the Project
 This project uses custom MVC (mode-view-controller) architecture.
@@ -13,5 +16,4 @@ This project uses custom MVC (mode-view-controller) architecture.
 - **controllers**: In this part of the modules we write all the business logic of applications
 - **warehouse**: In this part we write all the necessary CRUD calls to the database which can be reused in controllers
 
-## Example of Conversation with AI in MARATHI
-Refer to the file to see the how my systems takes relevant context from past conversation [Link to example.js](example.js) 
+
