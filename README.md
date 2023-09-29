@@ -7,7 +7,7 @@ Swadeshi Sahayak AI is an open-source project developed by Tejas Shirnalkar. It 
 https://documenter.getpostman.com/view/29167945/2s9YJXaRLW
 
 ## Example of Conversation with AI in MARATHI
-Refer to the file to see how my system takes relevant context from a past conversation and provides multilingual assistance [Link to example.js](example.js) 
+Refer to the example below to see how the project takes relevant context from a past conversation and provides multilingual assistance.
 ``` [
      // A normal question about DOGs
   {
